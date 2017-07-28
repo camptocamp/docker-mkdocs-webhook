@@ -1,0 +1,56 @@
+[
+  {
+    "id": "build-doc",
+    "execute-command": "/build-doc.sh",
+    "command-working-directory": "/",
+    "pass-arguments-to-command":
+    [
+      {
+        "source": "payload",
+        "name": "repository.ssh_url"
+      }
+    ],
+    "trigger-rule":
+    {
+      "or":
+      [
+        {
+          "match":
+          {
+            "type": "payload-hash-sha1",
+            "secret": "%{HOOKS_SECRET}",
+            "parameter":
+            {
+              "source": "header",
+              "name": "X-Hub-Signature"
+            }
+          }
+        },
+        {
+          "match":
+          {
+            "type": "payload-hash-sha256",
+            "secret": "%{HOOKS_SECRET}",
+            "parameter":
+            {
+              "source": "header",
+              "name": "X-Gogs-Signature"
+            }
+          }
+        },
+        {
+          "match":
+          {
+            "type": "value",
+            "value": "%{HOOKS_SECRET}",
+            "parameter":
+            {
+              "source": "payload",
+              "name": "secret"
+            }
+          }
+        }
+      ]
+    }
+  }
+]
