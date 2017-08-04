@@ -9,4 +9,8 @@ git fetch
 git checkout -f master
 git pull
 
-make build
+if [ -n ${GIT_SUBDIR} ]; then
+    cd ${GIT_SUBDIR} && make build
+else
+    make build
+fi
