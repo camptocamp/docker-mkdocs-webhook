@@ -1,0 +1,67 @@
+- id: github
+  execute-command: /build-doc.sh
+  command-working-directory: /
+  pass-arguments-to-command:
+  - source: payload
+    name: ref
+  - source: payload
+    name: repository.ssh_url
+  trigger-rule:
+    and:
+      - match:
+          type: payload-hash-sha1
+          secret: "{{ getenv "HOOK_SECRET" | js }}"
+          parameter:
+            source: header
+            name: X-Hub-Signature
+
+- id: gogs
+  execute-command: /build-doc.sh
+  command-working-directory: /
+  pass-arguments-to-command:
+  - source: payload
+    name: ref
+  - source: payload
+    name: repository.ssh_url
+  trigger-rule:
+    and:
+      - match:
+          type: payload-hash-sha256
+          secret: "{{ getenv "HOOK_SECRET" | js }}"
+          parameter:
+            source: header
+            name: X-Gogs-Signature
+
+- id: gitlab
+  execute-command: /build-doc.sh
+  command-working-directory: /
+  pass-arguments-to-command:
+  - source: payload
+    name: ref
+  - source: payload
+    name: repository.git_ssh_url
+  trigger-rule:
+    and:
+      - match:
+          type: value
+          value: "{{ getenv "HOOK_SECRET" | js }}"
+          parameter:
+            source: header
+            name: X-Gitlab-Token
+
+- id: payload
+  execute-command: /build-doc.sh
+  command-working-directory: /
+  pass-arguments-to-command:
+  - source: payload
+    name: ref
+  - source: payload
+    name: repository.ssh_url
+  trigger-rule:
+    and:
+      - match:
+          type: value
+          value: "{{ getenv "HOOK_SECRET" | js }}"
+          parameter:
+            source: payload
+            name: secret
