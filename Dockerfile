@@ -38,7 +38,7 @@ RUN apt-get update && \
 
 COPY nss_wrapper.sh /
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-#COPY /docker-entrypoint.d/* /docker-entrypoint.d/
+COPY /docker-entrypoint.d/* /docker-entrypoint.d/
 
 VOLUME ["/doc", "/var/lib/git/doc"]
 
